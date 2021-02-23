@@ -1,6 +1,6 @@
 class mastermind_display{
 
-	constructor(canvas, offsetX, offsetY, stepSize, codeLength){
+	constructor(canvas, offsetX, offsetY, stepSize, codeLength, color_number){
 		//size in percentage
 
 
@@ -24,14 +24,26 @@ class mastermind_display{
 		this.truth_code_possibilities_ratio = 0.5;
 
 		this.length = codeLength;
+		this.color_number = color_number;
+		
 		var xTruthStart = 
 			offsetX
 			+ this.dot_spacing *(1+this.result_ratio) * this.dot_radius * codeLength
 			+ this.dot_radius * this.result_spacing;
 		this.current_truth_table_start = [xTruthStart  ,offsetY];
+
+		this.good_color = 'green';
+		this.wrong_color = "red";
 	}
 
-
+	display_one_line(guess, guessResult, solver){
+		this.display_code(guess);
+		this.display_result(guessResult);
+		this.display_truth_placement_table(solver.truth_table.color_placement_possible);
+		this.display_truth_count_table(solver.truth_table.color_presence_count_possible	);
+		this.display_truth_code_possibilities(solver.truth_table.color_placement_possible);
+		this.go_forward_truth_table_height();
+	}
 
 	display_dot(x,y,size,color){
 		//this.context.arc(x, y, size, 0, 2 * Math.PI, false);
@@ -62,8 +74,6 @@ class mastermind_display{
 			color_id_to_color(code[i]))
 			//console.log("this color is " + this.color_id_to_color(code[i]));
 		}
-		this.current_line_start[1] += this.dot_radius * this.dot_spacing;
-
 	}
 
 	display_result(guessResult){
@@ -77,7 +87,7 @@ class mastermind_display{
 			this.display_dot(start_x,
 				this.current_line_start[1],
 				this.dot_radius* this.result_ratio,
-				"green");
+				this.good_color);
 			start_x += this.dot_radius* this.result_ratio *this.dot_spacing ;		
 		}
 		for(let i=0; i<guessResult.goodColor; i++){
@@ -91,7 +101,7 @@ class mastermind_display{
 			this.display_dot(start_x,
 				this.current_line_start[1],
 				this.dot_radius* this.result_ratio,
-				"red");
+				this.wrong_color);
 			start_x += this.dot_radius* this.result_ratio *this.dot_spacing ;
 		}
 		this.current_line_start[1] += this.dot_radius * this.dot_spacing;
@@ -100,6 +110,19 @@ class mastermind_display{
 	go_back_up_one_line(){
 		this.current_line_start[1] -= this.dot_radius * this.dot_spacing;	
 	}
+
+	go_forward_one_line(){
+		this.current_line_start[1] += this.dot_radius * this.dot_spacing;	
+	}
+
+	go_forward_truth_table_height(){
+		this.current_line_start[1] += this.dot_radius * (this.color_number + this.dot_spacing) * this.truth_table_ratio;
+	}
+
+	go_back_up_truth_table_height(){
+		this.current_line_start[1] -= this.dot_radius * (this.length + this.dot_spacing) * this.truth_table_ratio ;
+	}
+
 
 	display_truth_placement_table(truth_placement_table){
 		this.go_back_up_one_line();
@@ -115,9 +138,9 @@ class mastermind_display{
 
 			for(let i=0; i<truth_placement_table[col].length; i++){
 				if(truth_placement_table[col][i]>0){
-					color = "green";
+					color = this.good_color;
 				}else{
-					color = "red";
+					color = this.wrong_color;
 				}
 				this.display_dot(x,y,dot_size,color)
 				x+= dot_size;
@@ -143,9 +166,9 @@ class mastermind_display{
 
 			for(let i=0; i<truth_count_table[col].length; i++){
 				if(truth_count_table[col][i]>0){
-					color = "green";
+					color = this.good_color;
 				}else{
-					color = "red";
+					color = this.wrong_color;
 				}
 				this.display_dot(x,y,dot_size,color)
 				x+= dot_size;

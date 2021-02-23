@@ -47,6 +47,8 @@ class guess_result{
 		this.goodColor = goodColor;
 		this.length = length;
 		this.color_number = color_number;
+		this.total_ok_colors = wellPlaced + goodColor;
+		this.total_wrong = length - (wellPlaced + goodColor);
 	}
 
 	print_result(){
@@ -58,7 +60,7 @@ class guess_result{
 class guess{
 	constructor(code, length, color_number){
 		this.code = code;
-		this.color_count = count_colors(code, length, color_number);
+		this.color_count = count_colors(code, color_number);
 		this.color_number = color_number;
 	}
 
