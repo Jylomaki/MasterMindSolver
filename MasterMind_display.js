@@ -227,4 +227,33 @@ function color_id_to_color(id){
 			break;
 			default:
 		}
+}
+
+function logic_to_string(logic, prequel="\n"){
+	var string =  prequel;
+	switch(logic.type){
+		case 'placement':
+		case 'PLACEMENT':
+			return prequel + color_id_to_color(logic.color) + '(P) at ' + logic.data + " "
+			break;
+		case 'count':
+		case 'COUNT':
+			return prequel + logic.data + '(C) of ' + color_id_to_color(logic.color) + " "
+			break;
+		case 'or':
+		case 'OR':
+			string += ' OR' 
+			break;
+		case 'and':
+		case 'AND':
+			string += ' AND'
+			break;
+		default:
+			console.error("couldn't make out the type of this term:" + logic.type);
+			console.log(logic);
 	}
+	for(let i=0; i<logic.term_array.length; i++){
+		string += logic_to_string(logic.term_array[i], prequel+ ' ' +logic.type + ' ' );
+	}
+	return string;
+}

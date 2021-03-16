@@ -4,7 +4,7 @@ var color_count = 6;
 var secret = new secret_code(length,color_count);
 
 var solver = new mastermind_solver(length, color_count);
-solver.initialize_strategy("half_and_half");
+
 
 var game_displayer = new mastermind_display(
 	document.getElementById("game_canvas"),
@@ -21,6 +21,7 @@ function random_guess_one_line(solver, game_displayer){
 	game_displayer.display_one_line(random_guess, guessResult,solver);
 }
 
+solver.initialize_strategy("half_and_half");
 game_displayer.display_secret(secret.secret);
 game_displayer.go_forward_one_line();
 
@@ -30,8 +31,9 @@ game_displayer.go_forward_one_line();
 
 var guess_code = solver.first_step();
 
-console.log("first code:");
-console.log(guess_code);
+//console.log("first code:");
+//console.log(guess_code);
+
 function do_one_line(guess, secret, solver, game_displayer){
 	var guessResult = secret.try_guess(guess);
 	var next_code = solver.next_step(guess, guessResult);
@@ -42,6 +44,8 @@ function do_one_line(guess, secret, solver, game_displayer){
 for(let i=0; i<color_count/2; i++){
 	guess_code = do_one_line(guess_code, secret, solver, game_displayer);
 }
-for(let i=0; i<3; i++){
+
+var loops=0;
+for(let i=0; i<loops; i++){
 	random_guess_one_line(solver,game_displayer);
 }
